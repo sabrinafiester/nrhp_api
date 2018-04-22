@@ -7,7 +7,8 @@ const siteRouter = require('./routes/sites.js');
 const server = require('http').Server(app);
 
 app.use('/sites', siteRouter);
-server.listen(3000);
+let port = process.env.PORT || 3000;
+server.listen(port);
 
 mongoose.connect(process.env.MONGODB_URI);
 
