@@ -1,29 +1,21 @@
 require('dotenv').load();
-var app = require('express')();
-var fileUpload = require('express-fileupload');
-var mongoose = require('mongoose');
- 
-var server = require('http').Server(app);
- 
-app.use(fileUpload());
- 
-server.listen(3000);
- 
-mongoose.connect('mongodb://localhost/csvimport');
- 
-// var singlePlace = require('./singlePlace.js');
-// app.get('/:id([0-9]+)', singlePlace.get);
+const app = require('express')();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+app.use( bodyParser.json() );
+const siteRouter = require('./routes/sites.js');
+const server = require('http').Server(app);
 
-var inCity = require('./city.js');
-app.get('/city/:cityName([a-zA-Z]+)', inCity.get);
+app.use('/sites', siteRouter);
+server.listen(3000);
+
+mongoose.connect(process.env.MONGODB_URI);
+
+// mongoose.connect('mongodb://localhost/csvimport');
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
- 
-var template = require('./template.js');
-app.get('/template', template.get);
- 
 
-var upload = require('./upload.js');
+const upload = require('./ignore/upload.js');
 app.post('/', upload.post);
